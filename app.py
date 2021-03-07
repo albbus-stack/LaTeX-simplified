@@ -5,6 +5,74 @@ from pylatex import Document, Section, Subsection, Tabular, Math, TikZ, Axis, \
 from pylatex.utils import italic, bold
 import os
 
+import re
+
+
+def unrepr(text):
+    "reverse of repr"
+    return eval(text)
+
+
+def hexint(text):
+    "converts 0x... hexa string to integer"
+    return int(text, 16)
+
+
+class Parser:
+    def __call__(self, data, pattern):
+        regexp, types = self.compile(pattern)
+        match = regexp.match(data)
+        if not match:
+            raise ValueError
+        groups = [data[match.start("Grp%s" % i):match.end("Grp%s" % i)]
+                  for i in range(len(types))]
+        return tuple(t(g) for t, g in zip(types, groups))
+
+    def compile(self, pattern):
+        chars = []
+        types = []
+        i = 0
+        while i < len(pattern):
+            if pattern[i] != "%":
+                chars.append(pattern[i])
+                i += 1
+            elif pattern[i+1] == "%":
+                chars.append("%")
+                i += 2
+            elif pattern[i+1] == "s":
+                chars.append("(?P<Grp%s>.*?)" % len(types))
+                types.append(str)
+                i += 2
+            elif pattern[i+1] == "r":
+                chars.append("(?P<Grp%s>(?P<Par%s>['\"]).*?(?P=Par%s))"
+                             % (len(types), len(types), len(types)))
+                types.append(unrepr)
+                i += 2
+            elif pattern[i+1] == "c":
+                chars.append("(?P<Grp%s>.)" % len(types))
+                types.append(str)
+                i += 2
+            elif pattern[i+1] == "u":
+                chars.append("(?P<Grp%s>[0-9]+)" % len(types))
+                types.append(int)
+                i += 2
+            elif pattern[i+1] in "di":
+                chars.append("(?P<Grp%s>[+-]?[0-9]+)" % len(types))
+                types.append(int)
+                i += 2
+            elif pattern[i+1] in "fF":
+                chars.append("(?P<Grp%s>[+-]?[0-9]*\.[0-9]*)" % len(types))
+                types.append(float)
+                i += 2
+            elif pattern[i+1] in "xX":
+                chars.append("(?P<Grp%s>0[xX]?[0-9A-Fa-f]*)" % len(types))
+                types.append(hexint)
+                i += 2
+            else:
+                raise ValueError
+        return re.compile("^" + "".join(chars) + "$"), types
+
+
 if __name__ == '__main__':
     doc_filename = os.path.join(os.path.dirname(__file__), 'document.texs')
 
@@ -15,6 +83,8 @@ if __name__ == '__main__':
     with open(doc_filename, 'r') as reader:
         doc_lines = reader.readlines()
 
+    p = Parser()
+
     for i in range(0, len(doc_lines)):
         if "\\S " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
@@ -24,54 +94,36 @@ if __name__ == '__main__':
             doc_lines[i] = doc_lines[i].replace('\n', '')
             with doc.create(Subsection(doc_lines[i].replace('\\Ss ', ''))):
                 doc.append('')
-        elif 'i{' in doc_lines[i]:
+        if ('i{' in doc_lines[i]) | ('b{' in doc_lines[i]):
             line = doc_lines[i]
-            final = ' '
-            ital = ''
-            start = ''
-            j = 0
-            k = len(line)
-            while j < len(line)-1:
-                if (line[j] == 'i') & (line[j+1] == '{'):
-                    k = j+2
-                    while line[j+2] != '}':
-                        ital += line[j+2]
-                        j = j+1
-                    j = j+3
-                if j <= k:
-                    start += line[j]
+            ital = re.findall(r'i\{.*?\}|b\{.*?\}', line)
+            fital = []
+            query = '%s'
+            for it in ital:
+                if('i{' in it):
+                    query += 'i{.*}%s'
+                    fital.append(p(it, 'i{%s}'))
                 else:
-                    final += line[j]
-                j = j+1
-            final += line[j]
-            doc.append(start)
-            doc.append(italic(ital))
-            doc.append(NoEscape(r'\hspace{1pt} '))
-            doc.append(final)
-        elif 'b{' in doc_lines[i]:
-            line = doc_lines[i]
-            final = ' '
-            bol = ''
-            start = ''
-            j = 0
-            k = len(line)
-            while j < len(line)-1:
-                if (line[j] == 'b') & (line[j+1] == '{'):
-                    k = j+2
-                    while line[j+2] != '}':
-                        bol += line[j+2]
-                        j = j+1
-                    j = j+3
-                if j <= k:
-                    start += line[j]
+                    query += 'b{.*}%s'
+                    fital.append(p(it, 'b{%s}'))
+            plain_text = p(line, query)
+            for i in range(0, fital.__len__()):
+                doc.append(plain_text.__getitem__(i))
+                if 'i{' in ital.__getitem__(i):
+                    doc.append(italic(fital[i].__getitem__(0)))
                 else:
-                    final += line[j]
-                j = j+1
-            final += line[j]
-            doc.append(start)
-            doc.append(bold(bol))
-            doc.append(NoEscape(r'\hspace{1pt} '))
-            doc.append(final)
+                    doc.append(bold(fital[i].__getitem__(0)))
+                if plain_text.__getitem__(i+1)[0] == " ":
+                    doc.append(NoEscape(r'\hspace{1pt} '))
+            doc.append(plain_text.__getitem__(fital.__len__()))
+            if line.__contains__('\n'):
+                doc.append('\n')
+
+        if ('\\m' in doc_lines[i]):
+            doc_lines[i] = doc_lines[i].replace('\n', '')
+            doc_lines[i] = doc_lines[i].replace('\\m ', '')
+            d = doc_lines[i].split(' ')
+            doc.append(Math(data=d))
 
     print(doc_lines)
 

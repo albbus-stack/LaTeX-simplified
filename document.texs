@@ -1,5 +1,9 @@
 \S Sezione1
 \Ss Sottosezione1
 
-This is some i{italic text} i hope.
-And this is some b{bold text} i hope.
+This is some i{italic text} ok. And so it b{is}.
+This is some b{bold text}. So it i{is} and will b{be}.
+
+\Ss Sottosezione2
+
+\m 2*2 = 4
