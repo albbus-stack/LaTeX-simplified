@@ -1,26 +1,27 @@
-\documentclass{article}%
+\documentclass[titlepage]{article}%
 \usepackage[T1]{fontenc}%
 \usepackage[utf8]{inputenc}%
 \usepackage{lmodern}%
 \usepackage{textcomp}%
 \usepackage{lastpage}%
-\usepackage{geometry}%
-\geometry{tmargin=1cm,lmargin=1cm}%
 \usepackage{amsmath}%
 \usepackage{tikz}%
 \usepackage{pgfplots}%
 \pgfplotsset{compat=newest}%
 %
-%
+\title{Awesome Title}%
+\author{Anon}%
+\date{\today}%
 %
 \begin{document}%
 \normalsize%
-\section{Sezione1}%
-\label{sec:Sezione1}%
+\maketitle%
+\section{Demonstration}%
+\label{sec:Demonstration}%
 
 %
-\subsection{Sottosezione1}%
-\label{subsec:Sottosezione1}%
+\subsection{Text style}%
+\label{subsec:Textstyle}%
 
 %
 This is some %
@@ -38,15 +39,29 @@ This is some %
 \hspace{1pt} %
  and will %
 \textbf{be}%
-.%
-\newline%
-%
-\subsection{Sottosezione2}%
-\label{subsec:Sottosezione2}%
+. %
+\subsection{Math}%
+\label{subsec:Math}%
 
 %
 \[%
-2*2 = 4%
+2*2 = 4\newline%
+%
+\]%
+\subsection{Matrices}%
+\label{subsec:Matrices}%
+
+%
+\[%
+\begin{pmatrix}%
+100.0&10.0&20.0%
+\end{pmatrix} \begin{pmatrix}%
+2.0&3.0&4.0\\%
+0.0&0.0&1.0\\%
+0.0&0.0&2.0%
+\end{pmatrix} = \begin{pmatrix}%
+200.0&300.0&450.0%
+\end{pmatrix}%
 \]%
 \section{The simple stuff}%
 \label{sec:Thesimplestuff}%
