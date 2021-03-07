@@ -76,10 +76,17 @@ class Parser:
 if __name__ == '__main__':
     doc_filename = os.path.join(os.path.dirname(__file__), 'document.texs')
 
-    doc = Document(document_options='titlepage')
-
     with open(doc_filename, 'r') as reader:
         doc_lines = reader.readlines()
+
+    if ('\\2col' in doc_lines[0]) & ('\\title' in doc_lines[0]):
+        doc = Document(document_options='titlepage, twocolumn')
+    elif '\\2col' in doc_lines[0]:
+        doc = Document(document_options='twocolumn')
+    elif '\\title' in doc_lines[0]:
+        doc = Document(document_options='titlepage')
+    else:
+        doc = Document()
 
     p = Parser()
 
