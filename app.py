@@ -90,25 +90,25 @@ if __name__ == '__main__':
 
     p = Parser()
 
-    for i in range(0, len(doc_lines)):
+    for i in range(1, len(doc_lines)):
         if "\\T " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc.preamble.append(
                 Command('title', doc_lines[i].replace('\\T ', '')))
-        if "\\A " in doc_lines[i]:
+        elif "\\A " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc.preamble.append(
                 Command('author', doc_lines[i].replace('\\A ', '')))
-        if "\\D " in doc_lines[i]:
+        elif "\\D " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             if 'today' in doc_lines[i].replace('\\D ', ''):
                 doc.preamble.append(Command('date', NoEscape(r'\today')))
             else:
                 doc.preamble.append(
                     Command('date', doc_lines[i].replace('\\D ', '')))
-        if "\\Make" in doc_lines[i]:
+        elif "\\Make" in doc_lines[i]:
             doc.append(NoEscape(r'\maketitle'))
-        if "\\S " in doc_lines[i]:
+        elif "\\S " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             with doc.create(Section(doc_lines[i].replace('\\S ', ''))):
                 doc.append('')
@@ -116,7 +116,7 @@ if __name__ == '__main__':
             doc_lines[i] = doc_lines[i].replace('\n', '')
             with doc.create(Subsection(doc_lines[i].replace('\\Ss ', ''))):
                 doc.append('')
-        if ('i{' in doc_lines[i]) | ('b{' in doc_lines[i]):
+        elif ('i{' in doc_lines[i]) | ('b{' in doc_lines[i]):
             line = doc_lines[i]
             escape_new = True
             if '\\en' in line:
@@ -145,14 +145,46 @@ if __name__ == '__main__':
             if escape_new:
                 doc.append('\n')
 
-        if ('\\m' in doc_lines[i]):
+        elif ('\\m ' in doc_lines[i]):
             doc_lines[i] = doc_lines[i].replace('\\m ', '')
             d = doc_lines[i].split(' ')
             doc.append(Math(data=d))
 
-        if ('\\Mm' in doc_lines[i]):
+        elif ('im{' in doc_lines[i]):
+            line = doc_lines[i]
+            ital = re.findall(r'im\{.*?\}', line)
+            fital = []
+            query = '%s'
+            for it in ital:
+                query += 'im{.*}%s'
+                fital.append(p(it, 'im{%s}'))
+            plain_text = p(line, query)
+            print(fital)
+            for i in range(0, fital.__len__()):
+                doc.append(plain_text.__getitem__(i))
+                doc.append(Math(data=fital.__getitem__(i)[0], inline=True))
+                if plain_text.__getitem__(i+1)[0] == " ":
+                    doc.append(NoEscape(r'\hspace{1pt} '))
+            doc.append(plain_text.__getitem__(fital.__len__()))
+
+        elif ('\\Mmi' in doc_lines[i]):
             doc_lines[i] = doc_lines[i].replace('\n', '')
-            doc_lines[i] = doc_lines[i].replace('\\Mm ', '')
+            doc_lines[i] = doc_lines[i].replace('\\Mmi ', '')
+            d = doc_lines[i].split(' ')
+            M1 = str(d.__getitem__(0))
+            M2 = str(d.__getitem__(1))
+            M1 = M1.split(';')
+            M2 = M2.split(';')
+            for i in range(0, M1.__len__()):
+                M1[i] = M1[i].split(',')
+            for i in range(0, M2.__len__()):
+                M2[i] = M2[i].split(',')
+            a = np.matrix(M1, dtype=int)
+            b = np.matrix(M2, dtype=int)
+            doc.append(Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)]))
+        elif ('\\Mmf' in doc_lines[i]):
+            doc_lines[i] = doc_lines[i].replace('\n', '')
+            doc_lines[i] = doc_lines[i].replace('\\Mmf ', '')
             d = doc_lines[i].split(' ')
             M1 = str(d.__getitem__(0))
             M2 = str(d.__getitem__(1))
@@ -165,6 +197,9 @@ if __name__ == '__main__':
             a = np.matrix(M1, dtype=float)
             b = np.matrix(M2, dtype=float)
             doc.append(Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)]))
+        else:
+            doc_lines[i] = doc_lines[i].replace('\n', '')
+            doc.append(doc_lines[i])
 
     print(doc_lines)
 

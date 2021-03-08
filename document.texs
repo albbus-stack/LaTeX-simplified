@@ -7,40 +7,17 @@
 \S Demonstration
 \Ss Text style
 
-This is some i{italic text} ok. And so it b{is}.
-This is some b{bold text}. So it i{is} and will b{be}. \en
-
-\Ss Math
-
-\m 2*2 = 4
-
-\Ss Matrices
-
-\Mm 100,10,20 2,3,4;0,0,1;0,0,2
-
-\S Demonstration
-\Ss Text style
+Okk
 
 This is some i{italic text} ok. And so it b{is}.
 This is some b{bold text}. So it i{is} and will b{be}. \en
 
 \Ss Math
 
-\m 2*2 = 4
+Before im{2*2 = 4} was inline math.
+\m 3*3 = 9
 
 \Ss Matrices
 
-\Mm 100,10,20 2,3,4;0,0,1;0,0,2
-\S Demonstration
-\Ss Text style
-
-This is some i{italic text} ok. And so it b{is}.
-This is some b{bold text}. So it i{is} and will b{be}. \en
-
-\Ss Math
-
-\m 2*2 = 4
-
-\Ss Matrices
-
-\Mm 100,10,20 2,3,4;0,0,1;0,0,2
+\Mmi 100,10,20 2,3,4;0,0,1;0,0,2
+\Mmf 100,10,20 2,3,4;0,0,1;0,0,2
