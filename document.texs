@@ -1,5 +1,5 @@
-\title
-\T Awesome Title  // In the line above you can declare a titlepage (\title) and a two columns document (\2col)
+\Title
+\T Awesome Title  // In the line above you can declare a titlepage (\Title) and a two columns document (\2col)
 \A Anon
 \D today
 \Make
@@ -18,21 +18,21 @@ Before im{2*2 = 4} was inline math.
 
 \Ss Matrices
 
-\center
+\Center
 \Mmi 100,10,20 2,3,4;0,0,1;0,0,2
-\ecenter
+\Ecenter
 
-\center
+\Center
 \Mmf 100,10,20 2,3,4;0,0,1;0,0,2
-\ecenter
+\Ecenter
 
 \Ss Tabulars and center
 
 \Tab |cc|cc| \h 1,2,3,4 \h(1,2) \e 5,6,7,8 \h
 
-\center
+\Center
 \Tab |cc|cc| \h 1,2,3,4 \h(3,4) \e 5,6,7,8 \h
-\ecenter
+\Ecenter
 
 \Ss Run any LaTeX commands
 

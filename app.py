@@ -79,11 +79,11 @@ if __name__ == '__main__':
     with open(doc_filename, 'r') as reader:
         doc_lines = reader.readlines()
 
-    if ('\\2col' in doc_lines[0]) & ('\\title' in doc_lines[0]):
+    if ('\\2col' in doc_lines[0]) & ('\\Title' in doc_lines[0]):
         doc = Document(document_options='titlepage, twocolumn')
     elif '\\2col' in doc_lines[0]:
         doc = Document(document_options='twocolumn')
-    elif '\\title' in doc_lines[0]:
+    elif '\\Title' in doc_lines[0]:
         doc = Document(document_options='titlepage')
     else:
         doc = Document()
@@ -231,10 +231,10 @@ if __name__ == '__main__':
                         prop1 = prop.__getitem__(i).split(',')
                         table.add_row(prop1)
 
-        elif '\\center' in doc_lines[i]:
+        elif '\\Center' in doc_lines[i]:
             doc.append(NoEscape(r'\begin{center}'))
 
-        elif '\\ecenter' in doc_lines[i]:
+        elif '\\Ecenter' in doc_lines[i]:
             doc.append(NoEscape(r'\end{center}'))
 
         elif ('\\Tex{' in doc_lines[i]) | tex_present:
