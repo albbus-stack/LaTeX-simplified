@@ -1,5 +1,5 @@
 \title
-\T Awesome Title
+\T Awesome Title  // In the line above you can declare a titlepage (\title) and a two columns document (\2col)
 \A Anon
 \D today
 \Make
@@ -8,7 +8,7 @@
 \Ss Text style
 
 This is some i{italic text} ok. And so it b{is}.
-This is some b{bold text}. So it i{is} and will b{be}. \en
+This is some b{bold text}. So it i{is} and will b{be}. \en  // Make sure that when using italic and bold you escape the newline with \en
 
 \Ss Math
 
@@ -39,4 +39,4 @@ Before im{2*2 = 4} was inline math.
 \Tex{\begin{itemize}
   \item First item
   \item Second item
-  \end{itemize} } 
+  \end{itemize} } // Make sure to add a space before the ending curly bracket

@@ -93,6 +93,10 @@ if __name__ == '__main__':
 
     for i in range(1, len(doc_lines)):
 
+        if '// ' in doc_lines[i]:
+            comment_split = doc_lines[i].split('// ')
+            doc_lines[i] = comment_split[0]
+
         if "\\T " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc.preamble.append(
