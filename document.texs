@@ -13,13 +13,30 @@ This is some b{bold text}. So it i{is} and will b{be}. \en
 \Ss Math
 
 Before im{2*2 = 4} was inline math.
+
 \m 3*3 = 9
 
 \Ss Matrices
 
+\center
 \Mmi 100,10,20 2,3,4;0,0,1;0,0,2
+\ecenter
+
+\center
 \Mmf 100,10,20 2,3,4;0,0,1;0,0,2
+\ecenter
 
-\Ss Tabulars
+\Ss Tabulars and center
 
-\Tab |cc|cc| \h 1,2,3,4 \h(1,2) \e 4,5,6,7 \h
+\Tab |cc|cc| \h 1,2,3,4 \h(1,2) \e 5,6,7,8 \h
+
+\center
+\Tab |cc|cc| \h 1,2,3,4 \h(3,4) \e 5,6,7,8 \h
+\ecenter
+
+\Ss Run any LaTeX commands
+
+\Tex{\begin{itemize}
+  \item First item
+  \item Second item
+  \end{itemize} } 

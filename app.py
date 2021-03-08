@@ -89,16 +89,20 @@ if __name__ == '__main__':
         doc = Document()
 
     p = Parser()
+    tex_present = False
 
     for i in range(1, len(doc_lines)):
+
         if "\\T " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc.preamble.append(
                 Command('title', doc_lines[i].replace('\\T ', '')))
+
         elif "\\A " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc.preamble.append(
                 Command('author', doc_lines[i].replace('\\A ', '')))
+
         elif "\\D " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             if 'today' in doc_lines[i].replace('\\D ', ''):
@@ -106,16 +110,20 @@ if __name__ == '__main__':
             else:
                 doc.preamble.append(
                     Command('date', doc_lines[i].replace('\\D ', '')))
+
         elif "\\Make" in doc_lines[i]:
             doc.append(NoEscape(r'\maketitle'))
+
         elif "\\S " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             with doc.create(Section(doc_lines[i].replace('\\S ', ''))):
                 doc.append('')
+
         elif "\\Ss " in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             with doc.create(Subsection(doc_lines[i].replace('\\Ss ', ''))):
                 doc.append('')
+
         elif ('i{' in doc_lines[i]) | ('b{' in doc_lines[i]):
             line = doc_lines[i]
             escape_new = True
@@ -180,7 +188,9 @@ if __name__ == '__main__':
                 M2[i] = M2[i].split(',')
             a = np.matrix(M1, dtype=int)
             b = np.matrix(M2, dtype=int)
-            doc.append(Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)]))
+            doc.append(
+                Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)], inline=True))
+
         elif ('\\Mmf ' in doc_lines[i]):
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc_lines[i] = doc_lines[i].replace('\\Mmf ', '')
@@ -195,7 +205,9 @@ if __name__ == '__main__':
                 M2[i] = M2[i].split(',')
             a = np.matrix(M1, dtype=float)
             b = np.matrix(M2, dtype=float)
-            doc.append(Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)]))
+            doc.append(
+                Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)], inline=True))
+
         elif '\\Tab ' in doc_lines[i]:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc_lines[i] = doc_lines[i].replace('\\Tab ', '')
@@ -215,6 +227,23 @@ if __name__ == '__main__':
                         prop1 = prop.__getitem__(i).split(',')
                         table.add_row(prop1)
 
+        elif '\\center' in doc_lines[i]:
+            doc.append(NoEscape(r'\begin{center}'))
+
+        elif '\\ecenter' in doc_lines[i]:
+            doc.append(NoEscape(r'\end{center}'))
+
+        elif ('\\Tex{' in doc_lines[i]) | tex_present:
+            if not tex_present:
+                doc_lines[i] = doc_lines[i].replace('\\Tex{', '')
+            if ' }' in doc_lines[i]:
+                tex_present = False
+                doc_lines[i] = doc_lines[i].replace(' }', '')
+                doc.append(NoEscape(doc_lines[i]))
+            else:
+                tex_present = True
+                doc.append(NoEscape(doc_lines[i]))
+
         else:
             if doc_lines[i] == '\n':
                 doc_lines[i] = doc_lines[i].replace('\n', '')
@@ -223,7 +252,7 @@ if __name__ == '__main__':
     with doc.create(Section('The fancy stuff')):
         with doc.create(Subsection('Beautiful graphs')):
             with doc.create(TikZ()):
-                plot_options = 'height=4cm, width=6cm, grid=major'
+                plot_options = 'height=4cm, width=6cm, grid=minor'
                 with doc.create(Axis(options=plot_options)) as plot:
                     plot.append(Plot(name='model', func='-x^5 - 242'))
 

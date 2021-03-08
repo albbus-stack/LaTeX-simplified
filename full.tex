@@ -52,6 +52,7 @@ Before %
 $2*2 = 4$%
 \hspace{1pt} %
  was inline math.%
+%
 \[%
 3*3 = 9\newline%
 %
@@ -62,8 +63,8 @@ $2*2 = 4$%
 
 %
 %
-\[%
-\begin{pmatrix}%
+\begin{center}%
+$\begin{pmatrix}%
 100&10&20%
 \end{pmatrix} \begin{pmatrix}%
 2&3&4\\%
@@ -71,10 +72,11 @@ $2*2 = 4$%
 0&0&2%
 \end{pmatrix} = \begin{pmatrix}%
 200&300&450%
-\end{pmatrix}%
-\]%
-\[%
-\begin{pmatrix}%
+\end{pmatrix}$%
+\end{center}%
+%
+\begin{center}%
+$\begin{pmatrix}%
 100.0&10.0&20.0%
 \end{pmatrix} \begin{pmatrix}%
 2.0&3.0&4.0\\%
@@ -82,11 +84,11 @@ $2*2 = 4$%
 0.0&0.0&2.0%
 \end{pmatrix} = \begin{pmatrix}%
 200.0&300.0&450.0%
-\end{pmatrix}%
-\]%
+\end{pmatrix}$%
+\end{center}%
 %
-\subsection{Tabulars}%
-\label{subsec:Tabulars}%
+\subsection{Tabulars and center}%
+\label{subsec:Tabularsandcenter}%
 
 %
 %
@@ -97,15 +99,41 @@ $2*2 = 4$%
 -%
 2}%
 &&&\\%
-4&5&6&7\\%
+5&6&7&8\\%
 \hline%
 \end{tabular}%
+%
+\begin{center}%
+\begin{tabular}{|cc|cc|}%
+\hline%
+1&2&3&4\\%
+\cline{3%
+-%
+4}%
+&&&\\%
+5&6&7&8\\%
+\hline%
+\end{tabular}%
+\end{center}%
+%
+\subsection{Run any LaTeX commands}%
+\label{subsec:RunanyLaTeXcommands}%
+
+%
+%
+\begin{itemize}
+%
+  \item First item
+%
+  \item Second item
+%
+  \end{itemize} %
 \section{The fancy stuff}%
 \label{sec:Thefancystuff}%
 \subsection{Beautiful graphs}%
 \label{subsec:Beautifulgraphs}%
 \begin{tikzpicture}%
-\begin{axis}[height=4cm, width=6cm, grid=major]%
+\begin{axis}[height=4cm, width=6cm, grid=minor]%
 \addplot{-x^5 - 242};%
 %
 \addlegendentry{model}%
