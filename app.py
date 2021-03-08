@@ -216,7 +216,8 @@ if __name__ == '__main__':
                         table.add_row(prop1)
 
         else:
-            doc_lines[i] = doc_lines[i].replace('\n', '')
+            if doc_lines[i] == '\n':
+                doc_lines[i] = doc_lines[i].replace('\n', '')
             doc.append(doc_lines[i])
 
     with doc.create(Section('The fancy stuff')):

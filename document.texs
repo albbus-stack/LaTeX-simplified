@@ -7,8 +7,6 @@
 \S Demonstration
 \Ss Text style
 
-Okk
-
 This is some i{italic text} ok. And so it b{is}.
 This is some b{bold text}. So it i{is} and will b{be}. \en
 
