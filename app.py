@@ -159,7 +159,6 @@ if __name__ == '__main__':
                 query += 'im{.*}%s'
                 fital.append(p(it, 'im{%s}'))
             plain_text = p(line, query)
-            print(fital)
             for i in range(0, fital.__len__()):
                 doc.append(plain_text.__getitem__(i))
                 doc.append(Math(data=fital.__getitem__(i)[0], inline=True))
@@ -167,7 +166,7 @@ if __name__ == '__main__':
                     doc.append(NoEscape(r'\hspace{1pt} '))
             doc.append(plain_text.__getitem__(fital.__len__()))
 
-        elif ('\\Mmi' in doc_lines[i]):
+        elif ('\\Mmi ' in doc_lines[i]):
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc_lines[i] = doc_lines[i].replace('\\Mmi ', '')
             d = doc_lines[i].split(' ')
@@ -182,7 +181,7 @@ if __name__ == '__main__':
             a = np.matrix(M1, dtype=int)
             b = np.matrix(M2, dtype=int)
             doc.append(Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)]))
-        elif ('\\Mmf' in doc_lines[i]):
+        elif ('\\Mmf ' in doc_lines[i]):
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc_lines[i] = doc_lines[i].replace('\\Mmf ', '')
             d = doc_lines[i].split(' ')
@@ -197,19 +196,28 @@ if __name__ == '__main__':
             a = np.matrix(M1, dtype=float)
             b = np.matrix(M2, dtype=float)
             doc.append(Math(data=[Matrix(a), Matrix(b), '=', Matrix(a * b)]))
+        elif '\\Tab ' in doc_lines[i]:
+            doc_lines[i] = doc_lines[i].replace('\n', '')
+            doc_lines[i] = doc_lines[i].replace('\\Tab ', '')
+            prop = doc_lines[i].split(' ')
+            with doc.create(Tabular(prop[0])) as table:
+                for i in range(1, prop.__len__()):
+                    if prop.__getitem__(i) == '\\h':
+                        table.add_hline()
+                    elif '\\h(' in prop.__getitem__(i):
+                        prop1 = prop.__getitem__(i).replace('\\h(', '')
+                        prop2 = prop1.replace(')', '')
+                        prop3 = prop2.split(',')
+                        table.add_hline(prop3[0], prop3[1])
+                    elif '\\e' == prop.__getitem__(i):
+                        table.add_empty_row()
+                    else:
+                        prop1 = prop.__getitem__(i).split(',')
+                        table.add_row(prop1)
+
         else:
             doc_lines[i] = doc_lines[i].replace('\n', '')
             doc.append(doc_lines[i])
-
-    print(doc_lines)
-
-    with doc.create(Subsection('Table of something')):
-        with doc.create(Tabular('rc|cl')) as table:
-            table.add_hline()
-            table.add_row((1, 2, 3, 4))
-            table.add_hline(1, 2)
-            table.add_empty_row()
-            table.add_row((4, 5, 6, 7))
 
     with doc.create(Section('The fancy stuff')):
         with doc.create(Subsection('Beautiful graphs')):

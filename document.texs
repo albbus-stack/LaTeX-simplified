@@ -21,3 +21,7 @@ Before im{2*2 = 4} was inline math.
 
 \Mmi 100,10,20 2,3,4;0,0,1;0,0,2
 \Mmf 100,10,20 2,3,4;0,0,1;0,0,2
+
+\Ss Tabulars
+
+\Tab |cc|cc| \h 1,2,3,4 \h(1,2) \e 4,5,6,7 \h
